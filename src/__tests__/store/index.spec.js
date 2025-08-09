@@ -87,6 +87,24 @@ describe('Vuex Store: state & mutations', () => {
     expect(store.state.currentRound).toBe(maxIndex)
   })
 
+  it('SET_CURRENT_ROUND coerces non-number inputs using Number(value) || 0', () => {
+    store.commit('GENERATE_HORSES')
+    store.commit('GENERATE_SCHEDULE')
+    const maxIndex = store.state.raceSchedule.length - 1
+
+    // String number should coerce
+    store.commit('SET_CURRENT_ROUND', '2')
+    expect(store.state.currentRound).toBe(Math.min(2, maxIndex))
+
+    // Null should become 0 via Number(null)=0
+    store.commit('SET_CURRENT_ROUND', null)
+    expect(store.state.currentRound).toBe(0)
+
+    // NaN should fall back to 0 due to || 0
+    store.commit('SET_CURRENT_ROUND', 'not-a-number')
+    expect(store.state.currentRound).toBe(0)
+  })
+
   it('ADD_RACE_RESULT appends payload to raceResults', () => {
     const payload = { round: 1, results: [{ id: 1 }, { id: 2 }] }
     store.commit('ADD_RACE_RESULT', payload)
@@ -94,6 +112,14 @@ describe('Vuex Store: state & mutations', () => {
     const payload2 = { round: 2, results: [{ id: 3 }] }
     store.commit('ADD_RACE_RESULT', payload2)
     expect(store.state.raceResults).toEqual([payload, payload2])
+  })
+
+  it('ADD_RACE_RESULT initializes raceResults to [] when not an array', () => {
+    // Manually corrupt state then ensure mutation guards against it
+    store.state.raceResults = null
+    const payload = { round: 1, results: [] }
+    store.commit('ADD_RACE_RESULT', payload)
+    expect(store.state.raceResults).toEqual([payload])
   })
 })
 

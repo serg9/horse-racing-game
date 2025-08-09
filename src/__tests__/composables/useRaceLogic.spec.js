@@ -117,5 +117,35 @@ describe('useRaceLogic', () => {
     // Racing should be turned off at the end of last round
     expect(store.state.isRacing).toBe(false)
   })
+
+  it('restarts animation when currentRound changes while racing (watcher branch)', async () => {
+    const schedule = [
+      { distance: 8, participants: makeHorses(['A', 'B']) },
+      { distance: 8, participants: makeHorses(['C', 'D']) }
+    ]
+    const store = makeStore({ currentRound: 0, raceSchedule: schedule, isRacing: false })
+    const wrapper = mountHarness(store)
+
+    wrapper.vm.setTrackWidth(100)
+    wrapper.vm.setupWatchers()
+    wrapper.vm.initializeRace()
+
+    // Start racing
+    store.commit('SET_RACING', true)
+    await nextTick()
+
+    // Let a few frames run
+    for (let i = 0; i < 5; i++) vi.advanceTimersByTime(16)
+    const rafCallsBefore = rafSpy.mock.calls.length
+
+    // Change current round while still racing to trigger watcher branch if (isRacing) start()
+    store.commit('SET_CURRENT_ROUND', 1)
+    await nextTick()
+
+    // After watchers react, we expect at least one more RAF scheduling call
+    for (let i = 0; i < 5; i++) vi.advanceTimersByTime(16)
+    const rafCallsAfter = rafSpy.mock.calls.length
+    expect(rafCallsAfter).toBeGreaterThan(rafCallsBefore)
+  })
 })
 

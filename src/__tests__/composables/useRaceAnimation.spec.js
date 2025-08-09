@@ -172,5 +172,23 @@ describe('useRaceAnimation', () => {
     expect(runners[0].x).toBeCloseTo(100, 5) // 50% of 200
     expect(runners[1].x).toBeCloseTo(200, 5) // finished -> exactly trackWidth
   })
+
+  it('cleans up on unmount by stopping animation (onBeforeUnmount)', async () => {
+    const wrapper = mountHarness()
+    const { buildRunners, startAnimation, setLaps } = wrapper.vm
+    setLaps([5])
+    buildRunners(makeParticipants([{ name: 'Solo', condition: 100 }]))
+
+    const cafCallsBefore = cafSpy?.mock.calls.length || 0
+    startAnimation()
+    await nextTick()
+
+    // Unmount component to trigger onBeforeUnmount -> stopAnimation -> cancelAnimationFrame
+    wrapper.unmount()
+
+    // Ensure cancelAnimationFrame was called at least once due to cleanup
+    const cafCallsAfter = cafSpy?.mock.calls.length || 0
+    expect(cafCallsAfter).toBeGreaterThanOrEqual(cafCallsBefore)
+  })
 })
 

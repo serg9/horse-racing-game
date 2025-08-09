@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`App.vue > matches the basic HTML structure snapshot 1`] = `
+"<div class="app">
+  <horse-racing-game-stub></horse-racing-game-stub>
+</div>"
+`;
