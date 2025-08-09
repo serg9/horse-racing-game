@@ -134,10 +134,48 @@ The project uses modern Vue 3 practices:
 - **TypeScript-ready** structure (can be easily migrated)
 - **Modular architecture** with clear separation of concerns
 
+## ✅ Unit Testing & Coverage
+
+This project includes comprehensive unit tests for components, composables, and the Vuex store.
+
+- **Test runner:** Vitest (+ Vue Test Utils)
+- **Scripts:**
+  - Run tests: `yarn test`
+  - Run with coverage: `yarn test:coverage`
+
+### Latest test run summary
+
+- **Test files**: 7 passed (7)
+- **Tests**: 40 passed (40)
+- **Duration**: ~2s on local machine
+
+### Coverage summary (v8)
+
+| Scope       | % Stmts | % Branch | % Funcs | % Lines |
+|-------------|---------|----------|---------|---------|
+| All files   | 100     | 89.47    | 100     | 100     |
+
+### Breakdown by path
+
+| File/Path                           | % Stmts | % Branch | % Funcs | % Lines | Uncovered lines |
+|-------------------------------------|---------|----------|---------|---------|-----------------|
+| `src/`                              | 100     | 100      | 100     | 100     | —               |
+| `src/components/dumb/`              | 100     | 100      | 100     | 100     | —               |
+| `src/components/smart/`             | 100     | 100      | 100     | 100     | —               |
+| `src/views/HorseRacingGame.vue`     | 100     | 100      | 100     | 100     | —               |
+| `src/composables/useRaceAnimation.js` | 100   | 90       | 100     | 100     | 39, 49, 121     |
+| `src/composables/useRaceLogic.js`   | 100     | 87.5     | 100     | 100     | 48, 63          |
+| `src/composables/useRaceState.js`   | 100     | 88.23    | 100     | 100     | 14, 26          |
+| `src/store/index.js`                | 100     | 90.62    | 100     | 100     | 39, 42, 103     |
+
+### Notes and next steps
+
+- **Branches below 100%** are mainly in composables and store conditionals. Add tests for edge cases around race start/stop transitions and animation boundary conditions to improve branch coverage.
+
 ## 📝 License
 
 This project is created for educational and demonstrative purposes.
 
 ---
 
-**Enjoy the game! 🏆**
+## Enjoy the game! 🏆

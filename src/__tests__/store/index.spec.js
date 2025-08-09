@@ -105,6 +105,14 @@ describe('Vuex Store: state & mutations', () => {
     expect(store.state.currentRound).toBe(0)
   })
 
+  it('SET_GAME_OVER sets boolean flag', () => {
+    expect(store.state.gameOver).toBe(false)
+    store.commit('SET_GAME_OVER', true)
+    expect(store.state.gameOver).toBe(true)
+    store.commit('SET_GAME_OVER', 0)
+    expect(store.state.gameOver).toBe(false)
+  })
+
   it('ADD_RACE_RESULT appends payload to raceResults', () => {
     const payload = { round: 1, results: [{ id: 1 }, { id: 2 }] }
     store.commit('ADD_RACE_RESULT', payload)
@@ -120,6 +128,21 @@ describe('Vuex Store: state & mutations', () => {
     const payload = { round: 1, results: [] }
     store.commit('ADD_RACE_RESULT', payload)
     expect(store.state.raceResults).toEqual([payload])
+  })
+
+  it('ADD_RACE_RESULT sets gameOver when results reach total rounds', () => {
+    // Prepare schedule with total rounds
+    store.commit('GENERATE_HORSES')
+    store.commit('GENERATE_SCHEDULE')
+    // Simulate racing state
+    store.commit('SET_RACING', true)
+    const total = store.state.raceSchedule.length
+    // Add results up to total
+    for (let i = 1; i <= total; i++) {
+      store.commit('ADD_RACE_RESULT', { round: i, results: [] })
+    }
+    expect(store.state.isRacing).toBe(false)
+    expect(store.state.gameOver).toBe(true)
   })
 })
 
@@ -195,6 +218,14 @@ describe('Vuex Store: actions', () => {
     expect(store.state.isRacing).toBe(true)
     await store.dispatch('toggleRacing')
     expect(store.state.isRacing).toBe(false)
+  })
+
+  it('restartGame triggers generateSchedule (via dispatch)', async () => {
+    // Ensure horses exist so schedule participants fill properly
+    await store.dispatch('generateHorses')
+    expect(store.state.raceSchedule.length).toBe(0)
+    await store.dispatch('restartGame')
+    expect(store.state.raceSchedule.length).toBe(6)
   })
 })
 
