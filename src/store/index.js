@@ -25,6 +25,7 @@ export default createStore({
     raceResults: [],
     isRacing: false,
     lapNames: [],
+    gameOver: false,
   },
   getters: {
     hasProgram: (state) => {
@@ -33,10 +34,13 @@ export default createStore({
     totalRounds: (state) => {
       return state.raceSchedule.length
     },
+    isGameOver: (state) => state.gameOver,
     canStartRace: (state, getters) => {
-      return getters.hasProgram && state.currentRound < getters.totalRounds
+      // Enable start if there is a program and there are remaining rounds, or allow restart when game over
+      return getters.hasProgram && (state.currentRound < getters.totalRounds || state.gameOver)
     },
-    raceButtonText: (state) => {
+    raceButtonText: (state, getters) => {
+      if (getters.isGameOver) return 'NEW PROGRAM'
       if (state.isRacing) return 'PAUSE'
       return state.currentRound > 0 ? 'CONTINUE' : 'START'
     }
@@ -65,6 +69,8 @@ export default createStore({
       state.currentRound = 0;
       state.raceResults = [];
       state.lapNames = lapNames;
+      state.isRacing = false;
+      state.gameOver = false;
     },
     SET_RACING(state, value) {
       state.isRacing = !!value;
@@ -77,6 +83,15 @@ export default createStore({
     ADD_RACE_RESULT(state, payload) {
       if (!Array.isArray(state.raceResults)) state.raceResults = [];
       state.raceResults.push(payload);
+      // If all scheduled races have results, mark the game as over and stop racing
+      const total = state.raceSchedule.length;
+      if (total > 0 && state.raceResults.length >= total) {
+        state.isRacing = false;
+        state.gameOver = true;
+      }
+    },
+    SET_GAME_OVER(state, value) {
+      state.gameOver = !!value;
     },
   },
   actions: {
@@ -87,7 +102,13 @@ export default createStore({
       commit('GENERATE_SCHEDULE');
     },
     toggleRacing({ commit, state }) {
+      // Do not allow toggling when the game is over
+      if (state.gameOver) return;
       commit('SET_RACING', !state.isRacing);
+    },
+    restartGame({ dispatch }) {
+      // Regenerate the schedule to reset state and start fresh
+      dispatch('generateSchedule');
     }
   },
 });

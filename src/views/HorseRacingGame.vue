@@ -5,8 +5,10 @@
       :is-racing="isRacing"
       :current-round="currentRound"
       :total-rounds="totalRounds"
+      :is-game-over="isGameOver"
       @generate-program="handleGenerateProgram"
       @toggle-race="handleToggleRace"
+      @restart="handleRestart"
     />
 
     <div class="game-content">
@@ -37,6 +39,7 @@ const hasProgram = computed(() => store.getters.hasProgram);
 const isRacing = computed(() => store.state.isRacing);
 const currentRound = computed(() => store.state.currentRound);
 const totalRounds = computed(() => store.getters.totalRounds);
+const isGameOver = computed(() => store.getters.isGameOver);
 
 const handleGenerateProgram = async () => {
   await store.dispatch("generateSchedule");
@@ -44,6 +47,10 @@ const handleGenerateProgram = async () => {
 
 const handleToggleRace = () => {
   store.dispatch("toggleRacing");
+};
+
+const handleRestart = async () => {
+  await store.dispatch("restartGame");
 };
 
 store.dispatch("generateHorses");

@@ -1,6 +1,9 @@
 <template>
   <header class="game-header">
-    <h1>{{ title }}</h1>
+    <h1>
+      {{ title }}
+      <span v-if="isGameOver" class="badge program-complete">PROGRAM COMPLETE</span>
+    </h1>
     <div class="header-controls">
       <button class="btn generate-btn" @click="handleGenerateProgram">
         GENERATE PROGRAM
@@ -36,15 +39,21 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  isGameOver: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
-const emit = defineEmits(["generate-program", "toggle-race"]);
+const emit = defineEmits(["generate-program", "toggle-race", "restart"]);
 
 const canStartRace = computed(() => {
-  return props.hasProgram && props.currentRound < props.totalRounds;
+  return props.hasProgram && (props.currentRound < props.totalRounds || props.isGameOver);
 });
 
 const raceButtonText = computed(() => {
+  if (props.isGameOver) return "NEW PROGRAM";
   if (props.isRacing) return "PAUSE";
   return props.currentRound > 0 ? "CONTINUE" : "START";
 });
@@ -54,9 +63,9 @@ const handleGenerateProgram = () => {
 };
 
 const handleToggleRace = () => {
-  if (canStartRace.value) {
-    emit("toggle-race");
-  }
+  if (!canStartRace.value) return;
+  if (props.isGameOver) emit("restart");
+  else emit("toggle-race");
 };
 </script>
 
@@ -75,7 +84,19 @@ const handleToggleRace = () => {
     margin: 0;
     font-size: 1.5rem;
     color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
+}
+
+.badge.program-complete {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
 }
 
 .header-controls {
