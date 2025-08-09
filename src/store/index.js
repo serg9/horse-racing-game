@@ -36,7 +36,6 @@ export default createStore({
     },
     isGameOver: (state) => state.gameOver,
     canStartRace: (state, getters) => {
-      // Enable start if there is a program and there are remaining rounds, or allow restart when game over
       return getters.hasProgram && (state.currentRound < getters.totalRounds || state.gameOver)
     },
     raceButtonText: (state, getters) => {
@@ -83,7 +82,6 @@ export default createStore({
     ADD_RACE_RESULT(state, payload) {
       if (!Array.isArray(state.raceResults)) state.raceResults = [];
       state.raceResults.push(payload);
-      // If all scheduled races have results, mark the game as over and stop racing
       const total = state.raceSchedule.length;
       if (total > 0 && state.raceResults.length >= total) {
         state.isRacing = false;
@@ -102,12 +100,10 @@ export default createStore({
       commit('GENERATE_SCHEDULE');
     },
     toggleRacing({ commit, state }) {
-      // Do not allow toggling when the game is over
       if (state.gameOver) return;
       commit('SET_RACING', !state.isRacing);
     },
     restartGame({ dispatch }) {
-      // Regenerate the schedule to reset state and start fresh
       dispatch('generateSchedule');
     }
   },
