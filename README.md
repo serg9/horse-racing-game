@@ -53,7 +53,7 @@ yarn dev
 # npm
 npm run dev
 ```
-Application will be available at: `https://556e70b8.horse-racing-game-6sk.pages.dev/`
+Application will be available at: `https://horse-racing-game-three.vercel.app/`
 
 #### Production build
 ```bash
