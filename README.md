@@ -30,7 +30,7 @@ Make sure you have:
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:serg9/horse-racing-game.git
    cd horse-racing-game
    ```
 
