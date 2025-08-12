@@ -69,7 +69,7 @@ const handleToggleRace = () => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .game-header {
   display: flex;
   justify-content: space-between;

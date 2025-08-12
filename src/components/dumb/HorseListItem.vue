@@ -13,7 +13,7 @@ defineProps({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .color-indicator {
   width: 20px;
   height: 20px;

@@ -16,7 +16,9 @@
     />
     <div class="finish-label">Finish</div>
   </div>
-  <div ref="containerRef" class="race-track-container" v-else></div>
+  <div ref="containerRef" class="race-track-container" v-else>
+    <div class="empty-state">Please generate the race program</div>
+  </div>
 </template>
 
 <script setup>
@@ -64,14 +66,13 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .race-track-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
   overflow: auto;
-  max-height: 634px;
-  min-height: 634px;
+  height: 73vh;
   position: relative;
   padding-bottom: 0px;
   padding-right: 40px;
@@ -84,16 +85,15 @@ onBeforeUnmount(() => {
   bottom: 0;
   right: 40px;
   width: 8px;
-  background: #e03a3a;
+  background: var(--color-accent-red);
 }
 
-.race-track-container::before {
-  content: "Please generate the race program";
+.empty-state {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #111;
+  color: var(--color-text);
   font-weight: bold;
   text-align: center;
 }
@@ -105,7 +105,7 @@ onBeforeUnmount(() => {
   transform: translateY(-50%);
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  color: #111;
+  color: var(--color-text);
   background: transparent;
   font-weight: 700;
   letter-spacing: 1px;
@@ -114,8 +114,8 @@ onBeforeUnmount(() => {
 }
 
 .distance-label {
-  background-color: #9e9e9e;
-  color: white;
+  background-color: var(--color-gray-500);
+  color: #fff;
   padding: 5px 10px;
   border-radius: 4px;
   font-weight: bold;

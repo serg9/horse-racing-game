@@ -34,7 +34,7 @@ const props = defineProps({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .race-results {
     display: flex;
     flex-direction: column;

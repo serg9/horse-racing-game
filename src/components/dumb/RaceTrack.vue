@@ -26,13 +26,13 @@ const props = defineProps({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .race-track {
   display: flex;
   align-items: center;
   gap: 1rem;
   height: 48px;
-  background-color: #5b5b60;
+  background-color: var(--color-surface-dark);
   margin-top: 4px;
   position: relative;
 }
@@ -43,9 +43,9 @@ const props = defineProps({
   left: 45px;
   font-size: 8px;
   font-weight: bold;
-  color: rgb(255 255 255);
+  color: #fff;
   pointer-events: none;
-  background: #5b5b60;
+  background: var(--color-surface-dark);
   z-index: 0;
   white-space: nowrap;
   padding: 0 3px;
@@ -63,10 +63,9 @@ const props = defineProps({
   justify-content: center;
   writing-mode: vertical-lr;
   text-orientation: mixed;
-  background-color: #34c759;
+  background-color: var(--color-accent-green);
   padding: 0.5rem;
   height: 100%;
-  max-height: 30px;
   margin: 0;
 }
 
